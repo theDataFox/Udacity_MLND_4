@@ -24,7 +24,9 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed
         self.count = 1 # count for decay of epsilon
+        # epsilon
         self.constant_a = 0.995
+        # epsilon tolerance
         self.tolerance = 0.369
         
                         
@@ -144,7 +146,7 @@ class LearningAgent(Agent):
         # Otherwise, choose an action with the highest Q-value for the current state
 
         if not self.learning:
-            action = self.valid_actions[random.randint(0, 3)] # Basic Q-Learning
+            action = self.valid_actions[random.randint(0, 3)]
         
         else:
             if random.uniform(self.tolerance, 1.0) < self.epsilon:
