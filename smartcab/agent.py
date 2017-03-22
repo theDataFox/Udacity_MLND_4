@@ -113,38 +113,29 @@ class LearningAgent(Agent):
         # Set the agent state and default action
         self.state = state
         self.next_waypoint = self.planner.next_waypoint()
-        action = None
-        ########### 
+        action = random.choice(self.valid_actions)
+
+        ###########
         ## TO DO ##
         ###########
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
-        #   Otherwise, choose an action with the highest Q-value for the current state
-        rand = random.random()
-        maxQ = self.get_maxQ(state)
+        # Otherwise, choose an action with the highest Q-value for the current
+        # state
 
-        if self.env.trial_data['testing']:
-            
-            act_lst = [an_action for an_action, value in self.Q[state].items() if value == maxQ]
-            action = random.choice(act_lst)
-        
-        elif not self.learning:
-        
-            action = random.choice(self.valid_actions)
-        
-        elif (rand < self.epsilon):
-            
-            _action = [an_action for an_action, Qvalue in self.Q[state].items() if 0 == Qvalue]
-            if len(_action) >= 1: 
-                action = random.choice(_action)
-            else:
+        # When learning
+        if self.learning:
+            if self.epsilon > random.random():
                 action = random.choice(self.valid_actions)
-            
-        else:
+            else:
+                maxQ = self.get_maxQ(state)
 
-            act_lst = [an_action for an_action, value in self.Q[state].items() if value == maxQ]
-            action = random.choice(act_lst)
-        
+                # Create a list of all actions with maximum Q-value
+
+                maxQ_actions = [key for key in self.Q[state].keys() if self.Q[state][
+                    key] == maxQ]
+                action = random.choice(maxQ_actions)
+
         return action
 
 
@@ -197,7 +188,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True, alpha=0.01)
+    agent = env.create_agent(LearningAgent, learning=True, alpha = 0.01)
     
     ##############
     # Follow the driving agent
@@ -212,14 +203,14 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay=0.01, display=False, log_metrics=True, optimized=False)
+    sim = Simulator(env, update_delay=0.01, display=False, log_metrics=True, optimized=True)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10)
+    sim.run(n_test=20)
 
 
 if __name__ == '__main__':
