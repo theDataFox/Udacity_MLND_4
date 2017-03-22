@@ -132,9 +132,9 @@ class LearningAgent(Agent):
 
                 # Create a list of all actions with maximum Q-value
 
-                maxQ_actions = [key for key in self.Q[state].keys() if self.Q[state][
+                maxQ_actions_lst = [key for key in self.Q[state].keys() if self.Q[state][
                     key] == maxQ]
-                action = random.choice(maxQ_actions)
+                action = random.choice(maxQ_actions_lst)
 
         return action
 
